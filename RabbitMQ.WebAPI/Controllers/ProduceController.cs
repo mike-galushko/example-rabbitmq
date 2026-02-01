@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using RabbitMQ.Example;
 using RabbitMQ.WebAPI.Models;
 
 namespace RabbitMQ.WebAPI.Controllers;
 
+[EnableCors()]
 [Route("api/[controller]")]
 [ApiController]
 public class ProduceController : ControllerBase
