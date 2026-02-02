@@ -11,15 +11,15 @@ namespace RabbitMQ.WebAPI.Controllers;
 public class ProduceController : ControllerBase
 {
     [HttpPost]
-    public PostResponse? Post([FromBody]PostRequest model)
+    public async Task<PostResponse?> PostAsync([FromBody]PostRequest model)
     {
         PostResponse? response = null;
         if (model.Type == "simple")
         {
-            new SimpleProducer().Send(model.Message);
+            await new SimpleProducer().Send(model.Message);
             response = new PostResponse
             {
-                ConsumerA = string.Join("\n", SimpleProducer.Messages),
+                ConsumerA = SimpleConsumer.ReceivedMessages,
                 ConsumerB = "",
             };
         }

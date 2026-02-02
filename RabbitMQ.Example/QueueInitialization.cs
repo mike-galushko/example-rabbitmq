@@ -1,11 +1,10 @@
 ﻿using RabbitMQ.Client;
-using System.Text;
 
 namespace RabbitMQ.Example;
 
-public class SimpleProducer
+public class QueueInitialization
 {
-    public async Task Send(string message)
+    public static async Task EnsureAsync()
     {
         var factory = new ConnectionFactory()
         {
@@ -14,8 +13,8 @@ public class SimpleProducer
         };
         using var connection = await factory.CreateConnectionAsync();
         using var channel = await connection.CreateChannelAsync();
-        
-        var bytes = Encoding.UTF8.GetBytes(message);
-        await channel.BasicPublishAsync(exchange: string.Empty, routingKey: QueueNames.Simple, body: bytes);
+
+        // Simple queue
+        await channel.QueueDeclareAsync(queue: QueueNames.Simple, durable: false, exclusive: false, autoDelete: false, arguments: null);
     }
 }

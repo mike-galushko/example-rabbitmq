@@ -1,0 +1,20 @@
+name: gmike_example_rabbit
+
+# Описываем секреты, которые будут доступны в сервисах в папке /run/secrets/
+services:
+  gmike_rabbit:
+    container_name: gmike_example_rabbit
+    hostname: gmike_example_rabbit
+    image: rabbitmq:4-management
+    restart: always
+    ports:
+      # exposed:internal
+      - 207:5672
+      - 208:15672
+    networks:
+      - gmike_network
+
+networks:
+  gmike_network:
+    name: gmike_network
+    external: true

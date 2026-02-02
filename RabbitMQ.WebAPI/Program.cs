@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Options;
+using RabbitMQ.Example;
 
 namespace RabbitMQ.WebAPI
 {
@@ -6,7 +7,7 @@ namespace RabbitMQ.WebAPI
     {
         const string MyCorsPolicy = "_myCorsPolicy";
 
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +26,14 @@ namespace RabbitMQ.WebAPI
             app.UseAuthorization();
             app.UseCors(MyCorsPolicy);
             app.MapControllers();
+
+            // Ensure all ReabbitMQ queus are created.
+            await QueueInitialization.EnsureAsync();
+
+            // Run all RabbitMQ consumers.
+            using var simple = new SimpleConsumer();
+            await simple.StartListening();
+
             app.Run();
         }
     }
