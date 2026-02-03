@@ -29,6 +29,9 @@ services:
       - 5580:80
     environment:
       ASPNETCORE_URLS: http://+:80
+      RABBITMQ__HOST: $RABBITMQ__HOST
+      RABBITMQ__PORT: $RABBITMQ__PORT
+      # RABBITMQ__PORT2: $API_QUEUE_PORT
     #   CONNECTIONSTRINGS__HENENG: $API_CONNECTION_STRING_HENENG
     networks:
       - gmike_network

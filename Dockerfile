@@ -10,7 +10,7 @@ WORKDIR /App
 # Syntax: <src> <dst>
 # src in the build context
 # dst inside the docker image
-COPY ./ ./
+COPY . .
 
 RUN ls
 
