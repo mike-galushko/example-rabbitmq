@@ -1,5 +1,7 @@
-﻿using RabbitMQ.Client;
+﻿using Microsoft.Extensions.Options;
+using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using RabbitMQ.Example.Options;
 using System.Text;
 
 namespace RabbitMQ.Example;
@@ -14,13 +16,17 @@ public sealed class SimpleConsumer : IDisposable
     // to protect from a concurrent reference update.
     public static string ReceivedMessages = string.Empty;
 
+    private QueueOptions options;
+
+    public SimpleConsumer(QueueOptions options)
+    {
+        this.options = options;
+    }
+
     public async Task StartListening()
     {
-        var factory = new ConnectionFactory()
-        {
-            HostName = "localhost",
-            Port = 207,
-        };
+        var factory = options.ToConnectionFactory();
+
         connection = await factory.CreateConnectionAsync();
         channel = await connection.CreateChannelAsync();
         consumer = new AsyncEventingBasicConsumer(channel);

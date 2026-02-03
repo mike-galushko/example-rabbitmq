@@ -1,5 +1,6 @@
 ﻿using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using RabbitMQ.Example.Options;
 using System.Text;
 
 namespace RabbitMQ.Example;
@@ -16,18 +17,17 @@ public sealed class WorkerQueueConsumer : IDisposable
     public static string ReceivedMessagesB = string.Empty;
 
     private int consumerId = 0;
-    public WorkerQueueConsumer(int consumerId)
+    private QueueOptions options;
+
+    public WorkerQueueConsumer(QueueOptions options, int consumerId)
     {
         this.consumerId = consumerId;
+        this.options = options;
     }
 
     public async Task StartListening()
     {
-        var factory = new ConnectionFactory()
-        {
-            HostName = "localhost",
-            Port = 207,
-        };
+        var factory = options.ToConnectionFactory();
         connection = await factory.CreateConnectionAsync();
         channel = await connection.CreateChannelAsync();
 

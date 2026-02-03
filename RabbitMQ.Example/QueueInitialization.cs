@@ -1,16 +1,17 @@
 ﻿using RabbitMQ.Client;
+using RabbitMQ.Example.Options;
 
 namespace RabbitMQ.Example;
 
 public class QueueInitialization
 {
-    public static async Task EnsureAsync()
+    /// <summary>
+    /// Ensure all ReabbitMQ queus are created.
+    /// </summary>
+    public static async Task EnsureAsync(QueueOptions options)
     {
-        var factory = new ConnectionFactory()
-        {
-            HostName = "localhost",
-            Port = 207,
-        };
+        var factory = options.ToConnectionFactory();
+
         using var connection = await factory.CreateConnectionAsync();
         using var channel = await connection.CreateChannelAsync();
 

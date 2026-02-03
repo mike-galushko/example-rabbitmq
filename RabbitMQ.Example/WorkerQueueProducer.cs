@@ -9,8 +9,8 @@ public class WorkerQueueProducer
     {
         var factory = new ConnectionFactory()
         {
-            HostName = "localhost",
-            Port = 207,
+            HostName = "gmike_example_rabbit",
+            //Port = 207,
         };
         using var connection = await factory.CreateConnectionAsync();
         using var channel = await connection.CreateChannelAsync();

@@ -9,8 +9,8 @@ public class PublishSubscribeProducer
     {
         var factory = new ConnectionFactory()
         {
-            HostName = "localhost",
-            Port = 207,
+            HostName = "rabbit_queue",
+            //Port = 207,
         };
         using var connection = await factory.CreateConnectionAsync();
         using var channel = await connection.CreateChannelAsync();
