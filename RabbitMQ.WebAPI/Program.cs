@@ -33,6 +33,10 @@ namespace RabbitMQ.WebAPI
             // Run all RabbitMQ consumers.
             using var simple = new SimpleConsumer();
             await simple.StartListening();
+            using var workerA = new WorkerQueueConsumer(1);
+            using var workerB = new WorkerQueueConsumer(2);
+            await workerA.StartListening();
+            await workerB.StartListening();
 
             app.Run();
         }

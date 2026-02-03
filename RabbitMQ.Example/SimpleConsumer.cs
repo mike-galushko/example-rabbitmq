@@ -35,7 +35,7 @@ public sealed class SimpleConsumer : IDisposable
             return Task.CompletedTask;
         };
 
-        await channel.BasicConsumeAsync(QueueNames.Simple, autoAck:true, consumer: consumer);
+        await channel.BasicConsumeAsync(queue: QueueNames.Simple, autoAck:true, consumer: consumer);
     }
 
     public void Dispose()

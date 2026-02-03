@@ -16,5 +16,7 @@ public class QueueInitialization
 
         // Simple queue
         await channel.QueueDeclareAsync(queue: QueueNames.Simple, durable: false, exclusive: false, autoDelete: false, arguments: null);
+        // Worker queue
+        await channel.QueueDeclareAsync(queue: QueueNames.Worker, durable: false, exclusive: false, autoDelete: false, arguments: null);
     }
 }
