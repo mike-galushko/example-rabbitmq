@@ -15,5 +15,7 @@ public class ResetController : ControllerBase
         SimpleConsumer.ReceivedMessages = "";
         WorkerQueueConsumer.ReceivedMessagesA = "";
         WorkerQueueConsumer.ReceivedMessagesB = "";
+        PublishSubscribeConsumer.ReceivedMessagesA = "";
+        PublishSubscribeConsumer.ReceivedMessagesB = "";
     }
 }

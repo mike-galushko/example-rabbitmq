@@ -41,6 +41,15 @@ public class ProduceController : ControllerBase
                 ConsumerB = WorkerQueueConsumer.ReceivedMessagesB,
             };
         }
+        else if (model.Type == "publish")
+        {
+            await new PublishSubscribeProducer().Send(model.Message);
+            response = new PostResponse
+            {
+                ConsumerA = PublishSubscribeConsumer.ReceivedMessagesA,
+                ConsumerB = PublishSubscribeConsumer.ReceivedMessagesB,
+            };
+        }
 
         return response;
     }

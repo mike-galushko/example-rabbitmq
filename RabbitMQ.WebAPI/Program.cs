@@ -37,6 +37,10 @@ namespace RabbitMQ.WebAPI
             using var workerB = new WorkerQueueConsumer(2);
             await workerA.StartListening();
             await workerB.StartListening();
+            using var publishA = new PublishSubscribeConsumer(1);
+            using var publishB = new PublishSubscribeConsumer(2);
+            await publishA.StartListening();
+            await publishB.StartListening();
 
             app.Run();
         }
