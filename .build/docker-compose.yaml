@@ -1,17 +1,17 @@
-name: gmike_example_rabbit
+name: example_rabbit
 
 # Описываем секреты, которые будут доступны в сервисах в папке /run/secrets/
 services:
   rabbit_queue:
-    container_name: rabbit_queue
-    hostname: rabbit_queue
+    container_name: example_rabbit_queue
+    hostname: example_rabbit_queue
     image: rabbitmq:4-management
     restart: always
     shm_size: 128mb # Shared memory limit when using docker-compose
-    ports:
+    #ports:
       # exposed:internal
-      - 207:5672
-      - 208:15672
+      #- 5672:5672
+      #- 15672:15672
     networks:
       - gmike_network
 
@@ -19,20 +19,18 @@ services:
     build:
       dockerfile: Dockerfile
       context: ..
-    container_name: rabbit_api
-    hostname: rabbit_api
-    image: rabbit_api
+    container_name: example_rabbit_api
+    hostname: example_rabbit_api
+    image: example_rabbit_api
     restart: always
     shm_size: 128mb # Shared memory limit when using docker-compose
-    ports:
+    #ports:
       # exposed:internal
-      - 5580:80
+      #- 80:80
     environment:
       ASPNETCORE_URLS: http://+:80
       RABBITMQ__HOST: $RABBITMQ__HOST
       RABBITMQ__PORT: $RABBITMQ__PORT
-      # RABBITMQ__PORT2: $API_QUEUE_PORT
-    #   CONNECTIONSTRINGS__HENENG: $API_CONNECTION_STRING_HENENG
     networks:
       - gmike_network
 
