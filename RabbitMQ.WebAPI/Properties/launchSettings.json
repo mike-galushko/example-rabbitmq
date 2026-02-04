@@ -16,7 +16,9 @@
       "launchUrl": "http://localhost:5185/api",
       "applicationUrl": "http://localhost:5185",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "RABBITMQ__HOST": "localhost",
+        "RABBITMQ__PORT": "5672"
       }
     },
     "IIS Express": {
