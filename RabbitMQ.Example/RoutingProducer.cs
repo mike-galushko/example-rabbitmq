@@ -28,9 +28,9 @@ public class RoutingProducer
 
     private string GetRoutingKey(string message)
     {
-        if (message.StartsWith('1'))
+        if (message.StartsWith("a", StringComparison.OrdinalIgnoreCase))
             return RoutingKeys.RoutingA;
-        if (message.StartsWith('2'))
+        if (message.StartsWith("b", StringComparison.OrdinalIgnoreCase))
             return RoutingKeys.RoutingB;
 
         return string.Empty;

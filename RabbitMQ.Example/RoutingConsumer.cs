@@ -49,7 +49,7 @@ public sealed class RoutingConsumer : IDisposable
             }
         };
 
-        var queue = consumerId == 1 ? QueueNames.PublishA : QueueNames.PublishB;
+        var queue = consumerId == 1 ? QueueNames.RoutingA : QueueNames.RoutingB;
         await channel.BasicConsumeAsync(queue: queue, autoAck:true, consumer: consumer);
     }
 
