@@ -73,7 +73,11 @@ public class ProduceController : ControllerBase
                 ConsumerB = RoutingConsumer.ReceivedMessagesB,
             };
         }
+        else
+        {
+            throw new Exception("Unknown routing type specified");
+        }
 
-        return response;
+            return response;
     }
 }
