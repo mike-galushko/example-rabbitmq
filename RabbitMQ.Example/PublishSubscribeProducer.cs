@@ -1,17 +1,22 @@
-﻿using RabbitMQ.Client;
+﻿using Microsoft.Extensions.Options;
+using RabbitMQ.Client;
+using RabbitMQ.Example.Options;
 using System.Text;
 
 namespace RabbitMQ.Example;
 
 public class PublishSubscribeProducer
 {
+    private QueueOptions options;
+
+    public PublishSubscribeProducer(IOptions<QueueOptions> options)
+    {
+        this.options = options.Value;
+    }
+
     public async Task Send(string message)
     {
-        var factory = new ConnectionFactory()
-        {
-            HostName = "rabbit_queue",
-            //Port = 207,
-        };
+        var factory = options.ToConnectionFactory();
         using var connection = await factory.CreateConnectionAsync();
         using var channel = await connection.CreateChannelAsync();
 

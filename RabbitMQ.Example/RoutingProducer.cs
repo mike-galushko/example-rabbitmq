@@ -5,11 +5,11 @@ using System.Text;
 
 namespace RabbitMQ.Example;
 
-public class WorkerQueueProducer
+public class RoutingProducer
 {
     private QueueOptions options;
 
-    public WorkerQueueProducer(IOptions<QueueOptions> options)
+    public RoutingProducer(IOptions<QueueOptions> options)
     {
         this.options = options.Value;
     }
@@ -22,6 +22,17 @@ public class WorkerQueueProducer
 
         var bytes = Encoding.UTF8.GetBytes(message);
 
-        await channel.BasicPublishAsync(exchange: string.Empty, routingKey: QueueNames.Worker, body: bytes);
+        var routingKey = GetRoutingKey(message);
+        await channel.BasicPublishAsync(exchange: ExchangeNames.Routing, routingKey: routingKey, body: bytes);
+    }
+
+    private string GetRoutingKey(string message)
+    {
+        if (message.StartsWith('1'))
+            return RoutingKeys.RoutingA;
+        if (message.StartsWith('2'))
+            return RoutingKeys.RoutingB;
+
+        return string.Empty;
     }
 }

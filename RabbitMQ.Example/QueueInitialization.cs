@@ -27,5 +27,12 @@ public class QueueInitialization
         await channel.ExchangeDeclareAsync(exchange: ExchangeNames.Publish, type: ExchangeType.Fanout);
         await channel.QueueBindAsync(queue: QueueNames.PublishA, exchange: ExchangeNames.Publish, routingKey: string.Empty);
         await channel.QueueBindAsync(queue: QueueNames.PublishB, exchange: ExchangeNames.Publish, routingKey: string.Empty);
+
+        // Routing queue
+        await channel.QueueDeclareAsync(queue: QueueNames.RoutingA, durable: false, exclusive: false, autoDelete: false, arguments: null);
+        await channel.QueueDeclareAsync(queue: QueueNames.RoutingB, durable: false, exclusive: false, autoDelete: false, arguments: null);
+        await channel.ExchangeDeclareAsync(exchange: ExchangeNames.Routing, type: ExchangeType.Direct);
+        await channel.QueueBindAsync(queue: QueueNames.RoutingA, exchange: ExchangeNames.Routing, routingKey: RoutingKeys.RoutingA);
+        await channel.QueueBindAsync(queue: QueueNames.RoutingB, exchange: ExchangeNames.Routing, routingKey: RoutingKeys.RoutingB);
     }
 }

@@ -12,10 +12,12 @@ public class ResetController : ControllerBase
     [HttpPost]
     public void PostAsync()
     {
-        SimpleConsumer.ReceivedMessages = "";
-        WorkerQueueConsumer.ReceivedMessagesA = "";
-        WorkerQueueConsumer.ReceivedMessagesB = "";
-        PublishSubscribeConsumer.ReceivedMessagesA = "";
-        PublishSubscribeConsumer.ReceivedMessagesB = "";
+        SimpleConsumer.ReceivedMessages = string.Empty;
+        WorkerQueueConsumer.ReceivedMessagesA = string.Empty;
+        WorkerQueueConsumer.ReceivedMessagesB = string.Empty;
+        PublishSubscribeConsumer.ReceivedMessagesA = string.Empty;
+        PublishSubscribeConsumer.ReceivedMessagesB = string.Empty;
+        RoutingConsumer.ReceivedMessagesA = string.Empty;
+        RoutingConsumer.ReceivedMessagesB = string.Empty;
     }
 }

@@ -44,6 +44,8 @@ public static class Program
         using var workerB = new WorkerQueueConsumer(options, 2);
         using var publishA = new PublishSubscribeConsumer(options, 1);
         using var publishB = new PublishSubscribeConsumer(options, 2);
+        using var routingA = new RoutingConsumer(options, 1);
+        using var routingB = new RoutingConsumer(options, 2);
 
         await QueueInitialization.EnsureAsync(options);
         await simple.StartListening();
@@ -51,6 +53,8 @@ public static class Program
         await workerB.StartListening();
         await publishA.StartListening();
         await publishB.StartListening();
+        await routingA.StartListening();
+        await routingB.StartListening();
 
         app.Run();
     }
@@ -59,5 +63,10 @@ public static class Program
     {
         builder.Services.Configure<QueueOptions>(
             builder.Configuration.GetSection("rabbitmq"));
+
+        builder.Services.AddScoped<SimpleProducer>();
+        builder.Services.AddScoped<WorkerQueueProducer>();
+        builder.Services.AddScoped<PublishSubscribeProducer>();
+        builder.Services.AddScoped<RoutingProducer>();
     }
 }

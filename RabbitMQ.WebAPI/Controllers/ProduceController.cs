@@ -10,6 +10,20 @@ namespace RabbitMQ.WebAPI.Controllers;
 [ApiController]
 public class ProduceController : ControllerBase
 {
+    private readonly SimpleProducer simple;
+    private readonly WorkerQueueProducer worker;
+    private readonly PublishSubscribeProducer publish;
+    private readonly RoutingProducer routing;
+
+    public ProduceController(SimpleProducer simple, WorkerQueueProducer worker, PublishSubscribeProducer publish,
+        RoutingProducer routing)
+    {
+        this.simple = simple;
+        this.worker = worker;
+        this.publish = publish;
+        this.routing = routing;
+    }
+
     [HttpPost]
     public async Task<PostResponse?> PostAsync([FromBody]PostRequest model)
     {
@@ -17,7 +31,7 @@ public class ProduceController : ControllerBase
 
         if (model.Type == "simple")
         {
-            await new SimpleProducer().Send(model.Message);
+            await simple.Send(model.Message);
             response = new PostResponse
             {
                 ConsumerA = SimpleConsumer.ReceivedMessages,
@@ -29,12 +43,12 @@ public class ProduceController : ControllerBase
             // Send message multiple times, so to make worker tasks busy
             for (int i = 0; i < 6; i++)
             {
-                await new WorkerQueueProducer().Send($"{model.Message} #{i+1}");
+                await worker.Send($"{model.Message} #{i+1}");
             }
 
             // Give a time to worker tasks to complete
             await Task.Delay(1000);
-            
+
             response = new PostResponse
             {
                 ConsumerA = WorkerQueueConsumer.ReceivedMessagesA,
@@ -43,11 +57,20 @@ public class ProduceController : ControllerBase
         }
         else if (model.Type == "publish")
         {
-            await new PublishSubscribeProducer().Send(model.Message);
+            await publish.Send(model.Message);
             response = new PostResponse
             {
                 ConsumerA = PublishSubscribeConsumer.ReceivedMessagesA,
                 ConsumerB = PublishSubscribeConsumer.ReceivedMessagesB,
+            };
+        }
+        else if (model.Type == "routing")
+        {
+            await routing.Send(model.Message);
+            response = new PostResponse
+            {
+                ConsumerA = RoutingConsumer.ReceivedMessagesA,
+                ConsumerB = RoutingConsumer.ReceivedMessagesB,
             };
         }
 

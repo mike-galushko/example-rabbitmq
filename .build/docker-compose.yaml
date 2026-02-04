@@ -8,10 +8,10 @@ services:
     image: rabbitmq:4-management
     restart: always
     shm_size: 128mb # Shared memory limit when using docker-compose
-    #ports:
+    ports:
       # exposed:internal
-      #- 5672:5672
-      #- 15672:15672
+      - 5672:5672
+      - 15672:15672
     networks:
       - gmike_network
 
@@ -24,9 +24,9 @@ services:
     image: example_rabbit_api
     restart: always
     shm_size: 128mb # Shared memory limit when using docker-compose
-    #ports:
+    ports:
       # exposed:internal
-      #- 80:80
+      - 5185:80
     environment:
       ASPNETCORE_URLS: http://+:80
       RABBITMQ__HOST: $RABBITMQ__HOST
