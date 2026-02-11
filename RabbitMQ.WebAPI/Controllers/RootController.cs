@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using RabbitMQ.Example;
 
 namespace RabbitMQ.WebAPI.Controllers;
 
@@ -10,8 +9,14 @@ namespace RabbitMQ.WebAPI.Controllers;
 public class RootController : ControllerBase
 {
     [HttpGet]
-    public string Get()
+    public object Get()
     {
-        return "RabbitMQ.WebAPI v1.0";
+        var info = new 
+        {
+            Service = "RabbitMQ.WebAPI",
+            Revision = "1.1.2",
+            Started = DateTime.Now.ToString("yyy-MM-dd HH:mm"),
+        };
+        return info;
     }
 }

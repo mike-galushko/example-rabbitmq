@@ -6,7 +6,7 @@ using System.Text;
 
 namespace RabbitMQ.Example;
 
-public sealed class SimpleConsumer : IDisposable
+public sealed class TopicConsumer : IDisposable
 {
     AsyncEventingBasicConsumer? consumer = null;
     IConnection? connection = null;
@@ -14,12 +14,15 @@ public sealed class SimpleConsumer : IDisposable
 
     // Only one thread writes to that string. No need to add a lock
     // to protect from a concurrent reference update.
-    public static string ReceivedMessages = string.Empty;
+    public static string ReceivedMessagesA = string.Empty;
+    public static string ReceivedMessagesB = string.Empty;
 
+    private int consumerId = 0;
     private QueueOptions options;
 
-    public SimpleConsumer(QueueOptions options)
+    public TopicConsumer(QueueOptions options, int consumerId)
     {
+        this.consumerId = consumerId;
         this.options = options;
     }
 
@@ -29,19 +32,26 @@ public sealed class SimpleConsumer : IDisposable
 
         connection = await factory.CreateConnectionAsync();
         channel = await connection.CreateChannelAsync();
-        consumer = new AsyncEventingBasicConsumer(channel);
 
-        consumer.ReceivedAsync += (model, ea) =>
+        consumer = new AsyncEventingBasicConsumer(channel);
+        consumer.ReceivedAsync += async (model, ea) =>
         {
             var body = ea.Body.ToArray();
             var message = Encoding.UTF8.GetString(body);
 
             var text = $"[{DateTime.Now:HH:mm:ss}] {message}\n";
-            ReceivedMessages = text + ReceivedMessages;
-            return Task.CompletedTask;
+            if (consumerId == 1)
+            {
+                ReceivedMessagesA = text + ReceivedMessagesA;
+            }
+            else 
+            {
+                ReceivedMessagesB = text + ReceivedMessagesB;
+            }
         };
 
-        await channel.BasicConsumeAsync(queue: QueueNames.Simple, autoAck:true, consumer: consumer);
+        var queue = consumerId == 1 ? QueueNames.TopicA : QueueNames.TopicB;
+        await channel.BasicConsumeAsync(queue: queue, autoAck:true, consumer: consumer);
     }
 
     public void Dispose()

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using RabbitMQ.Example.Options;
+using RabbitMQ.Example.Setup;
 using System.Text;
 
 namespace RabbitMQ.Example;

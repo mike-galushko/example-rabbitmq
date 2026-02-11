@@ -14,14 +14,16 @@ public class ProduceController : ControllerBase
     private readonly WorkerQueueProducer worker;
     private readonly PublishSubscribeProducer publish;
     private readonly RoutingProducer routing;
+    private readonly TopicProducer topic;
 
     public ProduceController(SimpleProducer simple, WorkerQueueProducer worker, PublishSubscribeProducer publish,
-        RoutingProducer routing)
+        RoutingProducer routing, TopicProducer topic)
     {
         this.simple = simple;
         this.worker = worker;
         this.publish = publish;
         this.routing = routing;
+        this.topic = topic;
     }
 
     [HttpPost]
@@ -29,7 +31,8 @@ public class ProduceController : ControllerBase
     {
         PostResponse? response = null;
 
-        if (model.Type == "simple")
+        var type = model.Type.ToLower();
+        if (type == "simple")
         {
             await simple.Send(model.Message);
             response = new PostResponse
@@ -38,7 +41,7 @@ public class ProduceController : ControllerBase
                 ConsumerB = "",
             };
         }
-        else if (model.Type == "worker")
+        else if (type == "worker")
         {
             // Send message multiple times, so to make worker tasks busy
             for (int i = 0; i < 6; i++)
@@ -55,7 +58,7 @@ public class ProduceController : ControllerBase
                 ConsumerB = WorkerQueueConsumer.ReceivedMessagesB,
             };
         }
-        else if (model.Type == "publish")
+        else if (type == "publish")
         {
             await publish.Send(model.Message);
             response = new PostResponse
@@ -64,13 +67,22 @@ public class ProduceController : ControllerBase
                 ConsumerB = PublishSubscribeConsumer.ReceivedMessagesB,
             };
         }
-        else if (model.Type == "routing")
+        else if (type == "routing")
         {
             await routing.Send(model.Message);
             response = new PostResponse
             {
                 ConsumerA = RoutingConsumer.ReceivedMessagesA,
                 ConsumerB = RoutingConsumer.ReceivedMessagesB,
+            };
+        }
+        else if (type == "topic")
+        {
+            await topic.Send(model.Message);
+            response = new PostResponse
+            {
+                ConsumerA = TopicConsumer.ReceivedMessagesA,
+                ConsumerB = TopicConsumer.ReceivedMessagesB,
             };
         }
         else

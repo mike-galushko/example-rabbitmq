@@ -1,7 +1,7 @@
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Example;
 using RabbitMQ.Example.Options;
+using RabbitMQ.Example.Setup;
 
 namespace RabbitMQ.WebAPI;
 
@@ -46,6 +46,8 @@ public static class Program
         using var publishB = new PublishSubscribeConsumer(options, 2);
         using var routingA = new RoutingConsumer(options, 1);
         using var routingB = new RoutingConsumer(options, 2);
+        using var topicA = new TopicConsumer(options, 1);
+        using var topicB = new TopicConsumer(options, 2);
 
         await QueueInitialization.EnsureAsync(options);
         await simple.StartListening();
@@ -55,6 +57,8 @@ public static class Program
         await publishB.StartListening();
         await routingA.StartListening();
         await routingB.StartListening();
+        await topicA.StartListening();
+        await topicB.StartListening();
 
         app.Run();
     }
@@ -68,5 +72,6 @@ public static class Program
         builder.Services.AddScoped<WorkerQueueProducer>();
         builder.Services.AddScoped<PublishSubscribeProducer>();
         builder.Services.AddScoped<RoutingProducer>();
+        builder.Services.AddScoped<TopicProducer>();
     }
 }
