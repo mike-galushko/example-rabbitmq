@@ -14,7 +14,7 @@ public class RootController : ControllerBase
         var info = new 
         {
             Service = "RabbitMQ.WebAPI",
-            Revision = "1.1.2",
+            Revision = "1.1.3",
             Started = DateTime.Now.ToString("yyy-MM-dd HH:mm"),
         };
         return info;

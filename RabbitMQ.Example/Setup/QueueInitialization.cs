@@ -1,5 +1,6 @@
 ﻿using RabbitMQ.Client;
 using RabbitMQ.Example.Options;
+using System.Security.AccessControl;
 
 namespace RabbitMQ.Example.Setup;
 
@@ -41,6 +42,10 @@ public class QueueInitialization
         await channel.QueueDeclareAsync(queue: QueueNames.TopicB, durable: false, exclusive: false, autoDelete: false, arguments: null);
         await channel.QueueBindAsync(queue: QueueNames.TopicA, exchange: ExchangeNames.Topic, routingKey: RoutingKeys.TopicA);
         await channel.QueueBindAsync(queue: QueueNames.TopicA, exchange: ExchangeNames.Topic, routingKey: RoutingKeys.TopicB);
+
+        // RPC queue
+        await channel.QueueDeclareAsync(queue: QueueNames.RpcRequest, durable: false, exclusive: false, autoDelete: false, arguments: null);
+        await channel.BasicQosAsync(prefetchSize: 0, prefetchCount: 1, global: false);
     }
 
     public static void Reset()

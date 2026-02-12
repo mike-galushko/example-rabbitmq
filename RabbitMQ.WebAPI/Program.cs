@@ -48,6 +48,7 @@ public static class Program
         using var routingB = new RoutingConsumer(options, 2);
         using var topicA = new TopicConsumer(options, 1);
         using var topicB = new TopicConsumer(options, 2);
+        using var rpc = new RpcConsumer(options);
 
         await QueueInitialization.EnsureAsync(options);
         await simple.StartListening();
@@ -59,6 +60,7 @@ public static class Program
         await routingB.StartListening();
         await topicA.StartListening();
         await topicB.StartListening();
+        await rpc.StartListening();
 
         app.Run();
     }
