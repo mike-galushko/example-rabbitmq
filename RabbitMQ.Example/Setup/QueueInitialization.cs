@@ -41,7 +41,7 @@ public class QueueInitialization
         await channel.QueueDeclareAsync(queue: QueueNames.TopicA, durable: false, exclusive: false, autoDelete: false, arguments: null);
         await channel.QueueDeclareAsync(queue: QueueNames.TopicB, durable: false, exclusive: false, autoDelete: false, arguments: null);
         await channel.QueueBindAsync(queue: QueueNames.TopicA, exchange: ExchangeNames.Topic, routingKey: RoutingKeys.TopicA);
-        await channel.QueueBindAsync(queue: QueueNames.TopicA, exchange: ExchangeNames.Topic, routingKey: RoutingKeys.TopicB);
+        await channel.QueueBindAsync(queue: QueueNames.TopicB, exchange: ExchangeNames.Topic, routingKey: RoutingKeys.TopicB);
 
         // RPC queue
         await channel.QueueDeclareAsync(queue: QueueNames.RpcRequest, durable: false, exclusive: false, autoDelete: false, arguments: null);
