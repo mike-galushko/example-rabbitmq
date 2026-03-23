@@ -11,4 +11,5 @@ internal static class QueueNames
     public const string TopicA = "topic-a";
     public const string TopicB = "topic-b";
     public const string RpcRequest = "rpc-request";
+    public const string Confirm = "confirm";
 }

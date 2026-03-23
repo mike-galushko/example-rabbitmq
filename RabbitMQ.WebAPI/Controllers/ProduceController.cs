@@ -100,6 +100,17 @@ public class ProduceController : ControllerBase
                 ConsumerB = string.Empty, 
             };
         }
+        else if (type == "confirm")
+        {
+            await using var client = new RpcClient(options);
+            await client.StartAsync();
+            var result = await client.CallAsync(model.Message);
+            response = new PostResponse
+            {
+                ConsumerA = result,
+                ConsumerB = string.Empty,
+            };
+        }
         else
         {
             throw new Exception("Unknown routing type specified");
