@@ -18,9 +18,10 @@ public class ProduceController : ControllerBase
     private readonly RoutingProducer routing;
     private readonly TopicProducer topic;
     private readonly QueueOptions options;
+    private readonly ConfirmProducer confirm;
 
     public ProduceController(IOptions<QueueOptions> options, SimpleProducer simple, WorkerQueueProducer worker, PublishSubscribeProducer publish,
-        RoutingProducer routing, TopicProducer topic)
+        RoutingProducer routing, TopicProducer topic, ConfirmProducer confirm)
     {
         this.simple = simple;
         this.worker = worker;
@@ -28,6 +29,7 @@ public class ProduceController : ControllerBase
         this.routing = routing;
         this.topic = topic;
         this.options = options.Value;
+        this.confirm = confirm;
     }
 
     [HttpPost]
@@ -102,12 +104,10 @@ public class ProduceController : ControllerBase
         }
         else if (type == "confirm")
         {
-            await using var client = new RpcClient(options);
-            await client.StartAsync();
-            var result = await client.CallAsync(model.Message);
+            await confirm.Send(model.Message);
             response = new PostResponse
             {
-                ConsumerA = result,
+                ConsumerA = ConfirmConsumer.ReceivedMessages,
                 ConsumerB = string.Empty,
             };
         }

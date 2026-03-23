@@ -46,6 +46,9 @@ public class QueueInitialization
         // RPC queue
         await channel.QueueDeclareAsync(queue: QueueNames.RpcRequest, durable: false, exclusive: false, autoDelete: false, arguments: null);
         await channel.BasicQosAsync(prefetchSize: 0, prefetchCount: 1, global: false);
+
+        // Confirm queue
+        await channel.QueueDeclareAsync(queue: QueueNames.Confirm, durable: false, exclusive: false, autoDelete: false, arguments: null);
     }
 
     public static void Reset()

@@ -2,6 +2,7 @@ using Microsoft.Extensions.Options;
 using RabbitMQ.Example;
 using RabbitMQ.Example.Options;
 using RabbitMQ.Example.Setup;
+using System.Threading.RateLimiting;
 
 namespace RabbitMQ.WebAPI;
 
@@ -32,7 +33,6 @@ public static class Program
         app.UseCors(MyCorsPolicy);
         app.MapControllers();
 
-
         // Run all RabbitMQ consumers.
         var queueOptions = app.Services.GetService<IOptions<QueueOptions>>();
         if (queueOptions == null)
@@ -49,6 +49,7 @@ public static class Program
         using var topicA = new TopicConsumer(options, 1);
         using var topicB = new TopicConsumer(options, 2);
         using var rpc = new RpcConsumer(options);
+        using var confirm = new ConfirmConsumer(options);
 
         await QueueInitialization.EnsureAsync(options);
         await simple.StartListening();
@@ -61,6 +62,7 @@ public static class Program
         await topicA.StartListening();
         await topicB.StartListening();
         await rpc.StartListening();
+        await confirm.StartListening();
 
         app.Run();
     }
@@ -75,5 +77,6 @@ public static class Program
         builder.Services.AddScoped<PublishSubscribeProducer>();
         builder.Services.AddScoped<RoutingProducer>();
         builder.Services.AddScoped<TopicProducer>();
+        builder.Services.AddScoped<ConfirmProducer>();
     }
 }
